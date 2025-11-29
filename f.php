@@ -1,7 +1,7 @@
 <?php
 
 /**
- * F — PHP Filesystem Utility Library
+ * F — PHP Filesystem Library
  *
  * Version: 1.0.0
  * License: MIT
