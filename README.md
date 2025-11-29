@@ -1,9 +1,9 @@
-F — PHP Filesystem Utility Library
+F — PHP Filesystem Library
 
-Version: 1.0.0
-License: MIT
-Author: Artsiom Shvedko
-GitHub: https://github.com/artsiomshvedko/f
+- Version: 1.0.0
+- License: MIT
+- Author: Artsiom Shvedko
+- GitHub: https://github.com/artsiomshvedko/f
 
 Description:
 A compact and powerful PHP library that provides unified, safe, and consistent
