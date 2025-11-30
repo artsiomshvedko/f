@@ -3,7 +3,7 @@
 /**
  * F — PHP Filesystem Library
  *
- * Version: 1.0.0
+ * Version: 1.0.1
  * License: MIT
  * Author: Artsiom Shvedko
  * GitHub: https://github.com/artsiomshvedko/f
@@ -13,8 +13,10 @@
  * filesystem operations including scanning, searching, reading, writing, copying,
  * permissions, timestamps, and path utilities.
  *
- * Copyright (c) 2025 Artsiom Shvedko
+ * Copyright (c) 2025 Artsiom Shvedko 
 */
+
+
 
 define('F_SCAN_ALL',	0);
 define('F_SCAN_FILES',	1);
@@ -61,7 +63,7 @@ class f {
 		return $this->write($path, $data, $filesize, $maxlen);
 	}
 	
-	public function copy(string $source, string $dest, string $name = null): bool {
+	public function copy(string $source, string $dest, string|null $name = null): bool {
 		$return = false;
 		$source = $this->normalize($source);
 		$dest = $this->normalize($dest);
@@ -158,7 +160,7 @@ class f {
 		return $result;
 	}
 	
-	public function get_ini(string $path, string $section, string $key, mixed $value = ""): mixed {
+	public function ini_get(string $path, string $section, string $key, mixed $value = ""): mixed {
 		$path = $this->normalize($path);
 		if (!isset($this->buffer['ini'][$path])) {
 			$this->buffer['ini'][$path] = $this->read_ini($path);
@@ -169,6 +171,15 @@ class f {
 		if (!isset($this->buffer['ini'][$path][$section][$key])) {
 			$this->buffer['ini'][$path][$section][$key] = $value;
 		}
+		return $this->buffer['ini'][$path][$section][$key];
+	}
+	
+	public function ini_set(string $path, string $section, string $key, mixed $value): mixed {
+		$path = $this->normalize($path);
+		if (!isset($this->buffer['ini'][$path])) {
+			$this->buffer['ini'][$path] = $this->read_ini($path);
+		}
+		$this->buffer['ini'][$path][$section][$key] = $value;
 		return $this->buffer['ini'][$path][$section][$key];
 	}
 	
@@ -185,9 +196,13 @@ class f {
 		return filemtime($path) ?: null;
 	}
 	
-	public function make(string $path): bool {
+	public function make(string $path, string $chmod = '0755'): bool {
 		$path = $this->normalize($path);
-		return is_dir($path) || mkdir($path, 0755, true);
+		if (is_dir($path)) {
+			return true;
+		}
+		$mode = intval($chmod, 8);
+		return mkdir($path, $mode, true);
 	}
 	
 	public function name(string $path): string {
@@ -253,7 +268,7 @@ class f {
 	public function permission(string $path, string|null $chmod = null): string|bool {
 		$path = $this->normalize($path);
 		if ($chmod === null) {
-			if ($perms = fileperms($path) === false) {
+			if (($perms = fileperms($path)) === false) {
 				return false;
 			}
 			return sprintf('%04o', $perms & 0777);
@@ -341,7 +356,7 @@ class f {
 		return $return;
 	}
 	
-	public function read_csv(string $path, string $separator = ";"): array {
+	public function read_csv(string $path, string $separator = ';'): array {
 		$data = [];
 		$content = $this->read($path);
 		$content = preg_replace('/^\x{FEFF}/u', '', $content);
@@ -369,7 +384,7 @@ class f {
 		return json_decode($this->read($path), true);
 	}
 	
-	public function rename(string $path, string $name = null): bool {
+	public function rename(string $path, string|null $name = null): bool {
 		$path = $this->normalize($path);
 		$name = ($name === null) ? basename($path) : $name;
 		$new = dirname($path) . "/" . $name;
@@ -414,15 +429,6 @@ class f {
 		return $result;
 	}
 	
-	public function set_ini(string $path, string $section, string $key, mixed $value): mixed {
-		$path = $this->normalize($path);
-		if (!isset($this->buffer['ini'][$path])) {
-			$this->buffer['ini'][$path] = $this->read_ini($path);
-		}
-		$this->buffer['ini'][$path][$section][$key] = $value;
-		return $this->buffer['ini'][$path][$section][$key];
-	}
-	
 	public function size(string $path): int	{
 		$path = $this->normalize($path);
 		$size = 0;
@@ -455,7 +461,7 @@ class f {
 		return $space;
 	}
 	
-	public function write(string $path, string $data = "", int|null $offset = null, int|null $maxlen = null): bool {
+	public function write(string $path, string $data = '', int|null $offset = null, int|null $maxlen = null): bool {
 		$return = false;
 		$path = $this->normalize($path);
 		if (!$this->make(dirname($path))) {
@@ -502,7 +508,7 @@ class f {
 		return $return;
 	}
 	
-	public function write_csv(string $path, array $array = [], string $separator = ";"): bool {
+	public function write_csv(string $path, array $array = [], string $separator = ';'): bool {
 		$rows = [];
 		foreach ($array as $row) {
 			$row = array_map('strval', $row);
