@@ -1,6 +1,8 @@
-F — PHP Filesystem Library
+F — PHP Filesystem Library<br>
+Version: 1.0.1
+PHP Version: 8.0+
 
-Description:
+**Description:**<br>
 A compact and powerful PHP library that provides unified, safe, and consistent
 filesystem operations including scanning, searching, reading, writing, copying,
 permissions, timestamps, and path utilities.
@@ -15,7 +17,7 @@ $f->accessed — Get or update file last access time
 Gets the last access timestamp of a file, or updates it if $time is provided.
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 - time – New access time as a Unix timestamp. If null, no update is performed.
 
 **Return Values**<br>
@@ -74,7 +76,7 @@ $f->created — Get file creation time
 Gets the creation timestamp of a file.
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - Unix timestamp of file creation on success
@@ -128,7 +130,7 @@ $f->filename — Get filename without extension
 Returns the file name without its extension from the given path.
 
 **Parameters**<br>
-- path – File path.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - File name as a string (without the extension).
@@ -147,7 +149,7 @@ Scans a directory for files, directories, or links and returns detailed informat
 - The $keys parameter determines which attributes are included in the result.
 
 **Parameters**<br>
-- path – Path to the directory to scan.
+- path – Path to the file or directory.
 - key – Type of items to scan (e.g., files, directories, links). Default is F_SCAN_ALL.
 - keys – Which attributes to include in the result (default F_ALL).
 - recursive – Whether to scan subdirectories recursively.
@@ -180,7 +182,7 @@ Reads a value from an INI file, optionally setting a default if the key does not
 - If the specified key does not exist, the provided $value is returned and stored in the cache.
 
 **Parameters**<br>
-- path – Path to the INI file.
+- path – Path to the file.
 - section – INI section name.
 - key – Key within the section.
 - value – Default value to use if the key does not exist.
@@ -201,7 +203,7 @@ Sets a value in an INI file and updates the internal cache.
 - The new value is stored in the cache immediately.
 
 **Parameters**<br>
-- path – Path to the INI file.
+- path – Path to the file.
 - section – INI section name.
 - key – Key within the section to set.
 - value – Value to assign to the key.
@@ -220,7 +222,7 @@ $f->location — Get directory path of a file
 Returns the directory path (parent folder) of the given file path.
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - Directory path as a string.
@@ -236,7 +238,7 @@ $f->modified — Get or update file modification time
 Gets the last modification timestamp of a file, or updates it if $time is provided.
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 - time – New modification time as a Unix timestamp. If null, no update is performed.
 
 **Return Values**<br>
@@ -256,7 +258,7 @@ Creates a directory at the specified path.
 - The $chmod parameter sets the permissions for the new directory.
 
 **Parameters**<br>
-- path – Path of the directory to create.
+- path – Path to the directory.
 - chmod – Directory permissions in octal string format (default '0755').
 
 **Return Values**<br>
@@ -274,7 +276,7 @@ $f->name — Get file name with extension
 Returns the file name including its extension from the given path.
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - File name as a string (including extension, if any).
@@ -295,7 +297,7 @@ Converts a file or directory path to a normalized absolute form.
 - Uses internal caching to avoid repeated normalization of the same path.
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - Normalized absolute path as a string on success
@@ -314,7 +316,7 @@ Gets the permissions of a file or sets new permissions if $chmod is provided.
 - When $chmod is provided, sets the permissions and returns the result of chmod().
 
 **Parameters**<br>
-- path – Path to the file.
+- path – Path to the file or directory.
 - chmod – Optional new permissions in octal string format (e.g., '0755'). If null, no change is made.
 
 **Return Values**<br>
@@ -336,7 +338,7 @@ Removes a file, directory, or symbolic link.
 - Clears the file status cache after deletion.
 
 **Parameters**<br>
-- path – Path to the file, directory, or symbolic link to remove.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - true on successful deletion
@@ -379,7 +381,7 @@ Reads a CSV file and returns its contents as a two-dimensional array.
 - Removes empty trailing values from each row.
 
 **Parameters**<br>
-- path – Path to the CSV file.
+- path – Path to the file.
 - separator – Field separator character. Default is ';'.
 
 **Return Values**<br>
@@ -399,7 +401,7 @@ Reads an INI file and parses its contents into an associative array.
 - Returns an empty array if the file cannot be read or parsed.
 
 **Parameters**<br>
-- path – Path to the INI file.
+- path – Path to the file.
 
 **Return Values**<br>
 - Associative array representing the INI file contents
@@ -418,7 +420,7 @@ Reads a JSON file and decodes its contents into a PHP value.
 - Returns null if the file cannot be read or the JSON is invalid.
 
 **Parameters**<br>
-- path – Path to the JSON file.
+- path – Path to the file.
 
 **Return Values**<br>
 - Decoded JSON value (array, object, string, number, etc.)
@@ -437,7 +439,7 @@ Renames a file or directory.
 - The operation fails if a file or directory with the target name already exists.
 
 **Parameters**<br>
-- path – Path to the file or directory to rename.
+- path – Path to the file or directory.
 - name – Optional new name. If null, the original basename is used.
 
 **Return Values**<br>
@@ -458,7 +460,7 @@ Scans a directory and returns a list of files, directories, or symbolic links.
 - Can return either absolute paths or just basenames.
 
 **Parameters**<br>
-- path – Path to the directory to scan.
+- path – Path to the directory.
 - key – Type of items to scan (F_SCAN_ALL, F_SCAN_FILES, F_SCAN_DIRS, F_SCAN_LINKS). Default is F_SCAN_ALL.
 - absolute – If true, returns absolute paths; otherwise, returns basenames.
 - recursive – Whether to scan subdirectories recursively.
@@ -481,7 +483,7 @@ Returns the size in bytes of a file, symbolic link, or directory.
 - For directories, returns the total size of all contained files and subdirectories recursively.
 
 **Parameters**<br>
-- path – Path to the file, directory, or symbolic link.
+- path – Path to the file or directory.
 
 **Return Values**<br>
 - Size in bytes as an integer
@@ -498,7 +500,7 @@ Returns disk space information for the filesystem containing the specified path.
 - Can return total space, used space, or free space based on $key.
 
 **Parameters**<br>
-- path – Path to a file or directory on the target filesystem.
+- path – Path to the directory.
 - key – Type of space to return:
 	- F_SPACE_TOTAL – Total disk space (default)
 	- F_SPACE_USED – Used disk space
@@ -545,7 +547,7 @@ Writes a two-dimensional array to a CSV file.
 - Appends the separator at the end of each row.
 
 **Parameters**<br>
-- path – Path to the CSV file.
+- path – Path to the file.
 - array – Two-dimensional array to write.
 - separator – Field separator character (default ';').
 
@@ -568,7 +570,7 @@ Writes an associative array to an INI file.
 - Skips invalid section names or keys.
 
 **Parameters**<br>
-- path – Path to the INI file.
+- path – Path to the file.
 - array – Associative array to write. The top-level keys are sections, and their values are key-value pairs.
 
 **Return Values**<br>
@@ -588,7 +590,7 @@ Encodes an array as JSON and writes it to a file.
 - Returns false if encoding fails.
 
 **Parameters**<br>
-- path – Path to the JSON file.
+- path – Path to the file.
 - array – Array to encode and write.
 
 **Return Values**<br>
