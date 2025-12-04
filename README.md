@@ -1,5 +1,5 @@
 F — PHP Filesystem Library<br>
-Version: 1.0.1<br>
+Version: 1.0.2<br>
 PHP Version: 8.0+
 
 **Description:**<br>
@@ -251,7 +251,7 @@ Gets the last modification timestamp of a file, or updates it if $time is provid
 $f->make — Create a directory
 
 **Description**<br>
-`$f->make(string $path, string $chmod = '0755'): bool`
+`$f->make(string $path, int $chmod = 755): bool`
 
 Creates a directory at the specified path.
 - If the directory already exists, the function returns true.
@@ -259,7 +259,7 @@ Creates a directory at the specified path.
 
 **Parameters**<br>
 - path – Path to the directory.
-- chmod – Directory permissions in octal string format (default '0755').
+- chmod – Directory permissions (default 755).
 
 **Return Values**<br>
 - [true] on success or if the directory already exists
@@ -308,7 +308,7 @@ Converts a file or directory path to a normalized absolute form.
 $f->permission — Get or set file permissions
 
 **Description**<br>
-`$f->permission(string $path, string|null $chmod = null): string|bool`
+`$f->permission(string $path, int|null $chmod = null): int|bool`
 
 Gets the permissions of a file or sets new permissions if $chmod is provided.
 - When $chmod is null, returns the current permissions in octal string format.
@@ -316,7 +316,7 @@ Gets the permissions of a file or sets new permissions if $chmod is provided.
 
 **Parameters**<br>
 - path – Path to the file or directory.
-- chmod – Optional new permissions in octal string format (e.g., '0755'). If null, no change is made.
+- chmod – Optional new permissions (default 755). If null, no change is made.
 
 **Return Values**<br>
 - Current [permissions] as a string (octal) when $chmod is null
