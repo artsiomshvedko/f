@@ -3,7 +3,7 @@
 /**
  * F — PHP Filesystem Library
  *
- * Version: 1.0.1
+ * Version: 1.0.2
  * License: MIT
  * Author: Artsiom Shvedko
  * GitHub: https://github.com/artsiomshvedko/f
@@ -13,7 +13,7 @@
  * filesystem operations including scanning, searching, reading, writing, copying,
  * permissions, timestamps, and path utilities.
  *
- * Copyright (c) 2025 Artsiom Shvedko 
+ * Copyright (c) 2025 Artsiom Shvedko  
 */
 
 
@@ -109,11 +109,17 @@ class f {
 	
 	public function extension(string $path): string {
 		$path = $this->normalize($path);
+		if (is_dir($path)) {
+			return '';
+		}
 		return pathinfo($path, PATHINFO_EXTENSION);
 	}
 	
 	public function filename(string $path): string {
 		$path = $this->normalize($path);
+		if (is_dir($path)) {
+			return basename($path);
+		}
 		return pathinfo($path, PATHINFO_FILENAME);
 	}
 	
@@ -196,12 +202,12 @@ class f {
 		return filemtime($path) ?: null;
 	}
 	
-	public function make(string $path, string $chmod = '0755'): bool {
+	public function make(string $path, int $chmod = 755): bool {
 		$path = $this->normalize($path);
 		if (is_dir($path)) {
 			return true;
 		}
-		$mode = intval($chmod, 8);
+		$mode = octdec((string)$chmod);
 		return mkdir($path, $mode, true);
 	}
 	
@@ -214,7 +220,7 @@ class f {
 		return $name;
 	}
 	
-	public function normalize(string $path): string|false {
+	public function normalize(string $path): string {
 		$key = md5($path);
 		if (isset($this->buffer["normalize"][$key])) {
 			return $this->buffer["normalize"][$key];
@@ -265,15 +271,16 @@ class f {
 		return $normalized;
 	}
 	
-	public function permission(string $path, string|null $chmod = null): string|bool {
+	public function permission(string $path, int|null $chmod = null): int|bool {
 		$path = $this->normalize($path);
 		if ($chmod === null) {
-			if (($perms = fileperms($path)) === false) {
+			$perms = fileperms($path);
+			if ($perms === false) {
 				return false;
 			}
-			return sprintf('%04o', $perms & 0777);
+			return intval(substr(sprintf('%04o', $perms & 0777), -3));
 		}
-		$mode = intval($chmod, 8);
+		$mode = octdec((string)$chmod);
 		return chmod($path, $mode);
 	}
 	
