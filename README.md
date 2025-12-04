@@ -21,8 +21,8 @@ Gets the last access timestamp of a file, or updates it if $time is provided.
 - time – New access time as a Unix timestamp. If null, no update is performed.
 
 **Return Values**<br>
-- Unix timestamp on success
-- null on failure
+- Unix [timestamp] on success
+- [null] on failure
 
 <hr>
 
@@ -40,8 +40,8 @@ Appends data to the end of a file. If $maxlen is specified, only up to $maxlen b
 - maxlen – Maximum number of bytes to write. If null, all data is appended.
 
 **Return Values**<br>
-- true on success
-- false on failure
+- [true] on success
+- [false] on failure
 
 <hr>
 
@@ -62,8 +62,8 @@ Copies a file, directory, or symbolic link from a source path to a destination p
 - name – Optional new name for the copied item. If null, the original name is kept.
 
 **Return Values**<br>
-- true on success
-- false on failure
+- [true] on success
+- [false] on failure
 
 <hr>
 
@@ -79,8 +79,8 @@ Gets the creation timestamp of a file.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- Unix timestamp of file creation on success
-- null on failure
+- Unix [timestamp] on success
+- [null] on failure
 
 <hr>
 
@@ -100,8 +100,8 @@ Moves a file, directory, or symbolic link from a source path to a destination pa
 - name – Optional new name for the moved item. If null, the original name is kept.
 
 **Return Values**<br>
-- true on success
-- false on failure
+- [true] on success
+- [false] on failure
 
 <hr>
 
@@ -117,7 +117,7 @@ Returns the file extension of the given path.
 - path – Path to the file.
 
 **Return Values**<br>
-- File extension as a string (without the dot).
+- File [extension] as a string (without the dot).
 
 <hr>
 
@@ -133,7 +133,7 @@ Returns the file name without its extension from the given path.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- File name as a string (without the extension).
+- File [name] as a string (without the extension).
 
 <hr>
 
@@ -160,14 +160,14 @@ Scans a directory for files, directories, or links and returns detailed informat
 - depth – Maximum recursion depth (null for unlimited).
 
 **Return Values**<br>
-An associative array where keys are full paths and values are arrays of file attributes. Possible attributes include:
-- atime, ctime, mtime – Access, creation, and modification timestamps.
-- size – File size in bytes.
-- name – File name with extension.
-- filename – File name without extension.
-- extension – File extension.
-- type – Item type (file, dir, link, or unknown).
-- permission – File permissions.
+An associative [array] where keys are full paths and values are arrays of file attributes. Possible attributes include:
+- [atime], [ctime], [mtime] – Access, creation, and modification timestamps.
+- [size] – File size in bytes.
+- [name] – File name with extension.
+- [filename] – File name without extension.
+- [extension] – File extension.
+- [type] – Item type (file, dir, link, or unknown).
+- [permission] – File permissions.
 
 <hr>
 
@@ -188,7 +188,7 @@ Reads a value from an INI file, optionally setting a default if the key does not
 - value – Default value to use if the key does not exist.
 
 **Return Values**<br>
-- Value from the INI file if it exists, otherwise the provided default value.
+- [Value] from the INI file if it exists, otherwise the provided default value.
 
 <hr>
 
@@ -209,7 +209,7 @@ Sets a value in an INI file and updates the internal cache.
 - value – Value to assign to the key.
 
 **Return Values**<br>
-- The value that was set.
+- The [value] that was set.
 
 <hr>
 
@@ -225,7 +225,7 @@ Returns the directory path (parent folder) of the given file path.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- Directory path as a string.
+- Directory [path] as a string.
 
 <hr>
 
@@ -242,8 +242,8 @@ Gets the last modification timestamp of a file, or updates it if $time is provid
 - time – New modification time as a Unix timestamp. If null, no update is performed.
 
 **Return Values**<br>
-- Unix timestamp of last modification on success
-- null on failure
+- Unix [timestamp] on success
+- [null] on failure
 
 <hr>
 
@@ -262,8 +262,8 @@ Creates a directory at the specified path.
 - chmod – Directory permissions in octal string format (default '0755').
 
 **Return Values**<br>
-- true on success or if the directory already exists
-- false on failure
+- [true] on success or if the directory already exists
+- [false] on failure
 
 <hr>
 
@@ -279,7 +279,7 @@ Returns the file name including its extension from the given path.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- File name as a string (including extension, if any).
+- File [name] as a string (including extension, if any).
 
 <hr>
 
@@ -287,7 +287,7 @@ Returns the file name including its extension from the given path.
 $f->normalize — Normalize a file or directory path
 
 **Description**<br>
-`$f->normalize(string $path): string|false`
+`$f->normalize(string $path): string`
 
 Converts a file or directory path to a normalized absolute form.
 - Resolves relative segments like . and ...
@@ -300,8 +300,7 @@ Converts a file or directory path to a normalized absolute form.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- Normalized absolute path as a string on success
-- false if normalization fails
+- Normalized absolute [path] as a string on success
 
 <hr>
 
@@ -320,9 +319,9 @@ Gets the permissions of a file or sets new permissions if $chmod is provided.
 - chmod – Optional new permissions in octal string format (e.g., '0755'). If null, no change is made.
 
 **Return Values**<br>
-- Current permissions as a string (octal) when $chmod is null
-- true on successful permission change
-- false on failure
+- Current [permissions] as a string (octal) when $chmod is null
+- [true] on successful permission change
+- [false] on failure
 
 <hr>
 
@@ -341,8 +340,8 @@ Removes a file, directory, or symbolic link.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- true on successful deletion
-- false on failure
+- [true] on successful
+- [false] on failure
 
 <hr>
 
@@ -363,8 +362,7 @@ Reads data from a file with optional offset and maximum length.
 - maxlen – Optional maximum number of bytes to read. Default is the remainder of the file.
 
 **Return Values**<br>
-- String containing the read data
-- Empty string if the file does not exist, is empty, or reading fails
+- [String] containing the read data
 
 <hr>
 
@@ -385,8 +383,7 @@ Reads a CSV file and returns its contents as a two-dimensional array.
 - separator – Field separator character. Default is ';'.
 
 **Return Values**<br>
-- Two-dimensional array of CSV rows and fields
-- Empty array if the file is empty or cannot be read
+- Two-dimensional [array] of CSV rows and fields
 
 <hr>
 
@@ -404,8 +401,7 @@ Reads an INI file and parses its contents into an associative array.
 - path – Path to the file.
 
 **Return Values**<br>
-- Associative array representing the INI file contents
-- Empty array on failure
+- Associative [array] representing the INI file contents
 
 <hr>
 
@@ -423,8 +419,7 @@ Reads a JSON file and decodes its contents into a PHP value.
 - path – Path to the file.
 
 **Return Values**<br>
-- Decoded JSON value (array, object, string, number, etc.)
-- null on failure
+- Decoded JSON [value] (array, object, string, number, etc.)
 
 <hr>
 
@@ -443,8 +438,8 @@ Renames a file or directory.
 - name – Optional new name. If null, the original basename is used.
 
 **Return Values**<br>
-- true on success
-- false on failure
+- [true] on success
+- [false] on failure
 
 <hr>
 
@@ -467,7 +462,7 @@ Scans a directory and returns a list of files, directories, or symbolic links.
 - depth – Optional maximum recursion depth. Null for unlimited depth.
 
 **Return Values**<br>
-- Array of matching file, directory, or link paths (absolute or basename depending on $absolute)
+- [Array] of matching file, directory, or link paths (absolute or basename depending on $absolute)
 
 <hr>
 
@@ -486,7 +481,7 @@ Returns the size in bytes of a file, symbolic link, or directory.
 - path – Path to the file or directory.
 
 **Return Values**<br>
-- Size in bytes as an integer
+- [Size] in bytes as an integer
 
 <hr>
 
@@ -507,7 +502,7 @@ Returns disk space information for the filesystem containing the specified path.
 	- F_SPACE_FREE – Free disk space
 
 **Return Values**<br>
-- Space in bytes as an integer
+- [Space] in bytes as an integer
 
 <hr>
 
@@ -530,8 +525,8 @@ Writes data to a file with optional offset and maximum length.
 - maxlen – Optional maximum number of bytes to write.
 
 **Return Values**<br>
-- true on successful write
-- false on failure
+- [true] on successful
+- [false] on failure
 
 <hr>
 
@@ -552,8 +547,8 @@ Writes a two-dimensional array to a CSV file.
 - separator – Field separator character (default ';').
 
 **Return Values**<br>
-- true on successful write
-- false on failure
+- [true] on successful
+- [false] on failure
 
 <hr>
 
@@ -574,8 +569,8 @@ Writes an associative array to an INI file.
 - array – Associative array to write. The top-level keys are sections, and their values are key-value pairs.
 
 **Return Values**<br>
-- true on successful write
-- false on failure
+- [true] on successful
+- [false] on failure
 
 <hr>
 
@@ -594,5 +589,5 @@ Encodes an array as JSON and writes it to a file.
 - array – Array to encode and write.
 
 **Return Values**<br>
-- true on successful write
-- false on failure
+- [true] on successful
+- [false] on failure
