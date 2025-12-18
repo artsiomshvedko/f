@@ -3,7 +3,7 @@
 /**
  * F — PHP Filesystem Library
  *
- * Version: 1.0.2
+ * Version: 2.0.0
  * License: MIT
  * Author: Artsiom Shvedko
  * GitHub: https://github.com/artsiomshvedko/f
@@ -13,7 +13,7 @@
  * filesystem operations including scanning, searching, reading, writing, copying,
  * permissions, timestamps, and path utilities.
  *
- * Copyright (c) 2025 Artsiom Shvedko  
+ * Copyright (c) 2025 Artsiom Shvedko
 */
 
 
@@ -40,33 +40,27 @@ define('F_PERMISSION',	256);
 
 class f {
 	
-	private $buffer;
-	
-	public function __construct() {
-		$this->buffer = [];
-	}
-
-	public function accessed(string $path, int|null $time = null): int|null {
-		$path = $this->normalize($path);
+	public static function accessed(string $path, int|null $time = null): int|null {
+		$path = self::normalize($path);
 		if ($time !== null) {
 			touch($path, null, $time);
 		}
 		return fileatime($path) ?: null;
 	}
 	
-	public function append(string $path, string $data, int|null $maxlen = null): bool {
-		$path = $this->normalize($path);
+	public static function append(string $path, string $data, int|null $maxlen = null): bool {
+		$path = self::normalize($path);
 		$filesize = 0;
 		if (is_file($path)) {
 			$filesize = filesize($path) ?: 0;
 		}
-		return $this->write($path, $data, $filesize, $maxlen);
+		return self::write($path, $data, $filesize, $maxlen);
 	}
 	
-	public function copy(string $source, string $dest, string|null $name = null): bool {
+	public static function copy(string $source, string $dest, string|null $name = null): bool {
 		$return = false;
-		$source = $this->normalize($source);
-		$dest = $this->normalize($dest);
+		$source = self::normalize($source);
+		$dest = self::normalize($dest);
 		$name = ($name === null) ? basename($source) : $name;
 		if (file_exists($source)) {
 			$target = $dest . "/" . $name;
@@ -77,12 +71,12 @@ class f {
 				$link = readlink($source);
 				$return = (($link !== false) && (symlink($link, $target)));
 			} elseif (is_dir($source)) {
-				if ($this->make($target)) {
+				if (self::make($target)) {
 					if ($dh = opendir($source)) {
 						$return = true;
 						while (($item = readdir($dh)) !== false) {
 							if (($item === '.') || ($item === '..')) continue;
-							if (!$this->copy($source . "/" . $item, $target, $item)) {
+							if (!self::copy($source . "/" . $item, $target, $item)) {
 								$return = false;
 								break;
 							}
@@ -95,35 +89,35 @@ class f {
 		return $return;
 	}
 	
-	public function created(string $path): int|null {
-		$path = $this->normalize($path);
+	public static function created(string $path): int|null {
+		$path = self::normalize($path);
 		return filectime($path) ?: null;
 	}
 	
-	public function cut(string $source, string $dest, string|null $name = null): bool {
-		if ($this->copy($source, $dest, $name)) {
-			return $this->remove($source);
+	public static function cut(string $source, string $dest, string|null $name = null): bool {
+		if (self::copy($source, $dest, $name)) {
+			return self::remove($source);
 		}
 		return false;
 	}
 	
-	public function extension(string $path): string {
-		$path = $this->normalize($path);
+	public static function extension(string $path): string {
+		$path = self::normalize($path);
 		if (is_dir($path)) {
 			return '';
 		}
 		return pathinfo($path, PATHINFO_EXTENSION);
 	}
 	
-	public function filename(string $path): string {
-		$path = $this->normalize($path);
+	public static function filename(string $path): string {
+		$path = self::normalize($path);
 		if (is_dir($path)) {
 			return basename($path);
 		}
 		return pathinfo($path, PATHINFO_FILENAME);
 	}
 	
-	public function find(string $path, int $key = F_SCAN_ALL, int $keys = F_ALL, bool $recursive = false, string|null $query = null, int|null $depth = null): array {
+	public static function find(string $path, int $key = F_SCAN_ALL, int $keys = F_ALL, bool $recursive = false, string|null $query = null, int|null $depth = null): array {
 		$filter = json_decode($query ?? '', true) ?: [];
 		$pattern = $filter['pattern'] ?? null;
 		$min = isset($filter['size']['min']) ? (int)$filter['size']['min'] : 0;
@@ -139,14 +133,14 @@ class f {
 			return $size >= $min && $size <= $max;
 		};
 		$result = [];
-		$files = $this->scan($path, $key, true, $recursive, $depth);
+		$files = self::scan($path, $key, true, $recursive, $depth);
 		foreach ($files as $file) {
 			$basename = basename(str_replace('\\', '/', $file));
 			if ($pattern !== null && !fnmatch($pattern, $basename)) continue;
-			$atime = (int)$this->accessed($file);
-			$ctime = (int)$this->created($file);
-			$mtime = (int)$this->modified($file);
-			$size = (int)$this->size($file);
+			$atime = (int)self::accessed($file);
+			$ctime = (int)self::created($file);
+			$mtime = (int)self::modified($file);
+			$size = (int)self::size($file);
 			if (isset($time['atime']) && !$check_time($atime, $time['atime'])) continue;
 			if (isset($time['ctime']) && !$check_time($ctime, $time['ctime'])) continue;
 			if (isset($time['mtime']) && !$check_time($mtime, $time['mtime'])) continue;
@@ -156,54 +150,31 @@ class f {
 			if ($keys & F_CTIME) $data['ctime'] = $ctime;
 			if ($keys & F_MTIME) $data['mtime'] = $mtime;
 			if ($keys & F_SIZE) $data['size'] = $size;
-			if ($keys & F_NAME) $data['name'] = $this->name($file);
-			if ($keys & F_FILENAME) $data['filename'] = $this->filename($file);
-			if ($keys & F_EXTENSION) $data['extension'] = $this->extension($file);
+			if ($keys & F_NAME) $data['name'] = self::name($file);
+			if ($keys & F_FILENAME) $data['filename'] = self::filename($file);
+			if ($keys & F_EXTENSION) $data['extension'] = self::extension($file);
 			if ($keys & F_TYPE) $data['type'] = is_link($file) ? 'link' : (is_dir($file) ? 'dir' : (is_file($file) ? 'file' : 'unknown'));
-			if ($keys & F_PERMISSION) $data['permission'] = $this->permission($file);
+			if ($keys & F_PERMISSION) $data['permission'] = self::permission($file);
 			$result[$file] = $data;
 		}
 		return $result;
 	}
 	
-	public function ini_get(string $path, string $section, string $key, mixed $value = ""): mixed {
-		$path = $this->normalize($path);
-		if (!isset($this->buffer['ini'][$path])) {
-			$this->buffer['ini'][$path] = $this->read_ini($path);
-			if ($this->buffer['ini'][$path] === false) {
-				$this->buffer['ini'][$path] = [];
-			}
-		}
-		if (!isset($this->buffer['ini'][$path][$section][$key])) {
-			$this->buffer['ini'][$path][$section][$key] = $value;
-		}
-		return $this->buffer['ini'][$path][$section][$key];
-	}
-	
-	public function ini_set(string $path, string $section, string $key, mixed $value): mixed {
-		$path = $this->normalize($path);
-		if (!isset($this->buffer['ini'][$path])) {
-			$this->buffer['ini'][$path] = $this->read_ini($path);
-		}
-		$this->buffer['ini'][$path][$section][$key] = $value;
-		return $this->buffer['ini'][$path][$section][$key];
-	}
-	
-	public function location(string $path): string {
-		$path = $this->normalize($path);
+	public static function location(string $path): string {
+		$path = self::normalize($path);
 		return pathinfo($path, PATHINFO_DIRNAME);
 	}
 	
-	public function modified(string $path, int|null $time = null): int|null {
-		$path = $this->normalize($path);
+	public static function modified(string $path, int|null $time = null): int|null {
+		$path = self::normalize($path);
 		if ($time !== null) {
 			touch($path, $time);
 		}
 		return filemtime($path) ?: null;
 	}
 	
-	public function make(string $path, int $chmod = 755): bool {
-		$path = $this->normalize($path);
+	public static function make(string $path, int $chmod = 755): bool {
+		$path = self::normalize($path);
 		if (is_dir($path)) {
 			return true;
 		}
@@ -211,20 +182,17 @@ class f {
 		return mkdir($path, $mode, true);
 	}
 	
-	public function name(string $path): string {
-		$name = $this->filename($path);
-		$extension = $this->extension($path);
+	public static function name(string $path): string {
+		$name = self::filename($path);
+		$extension = self::extension($path);
 		if ($extension) {
 			$name .= '.' . $extension;
 		}
 		return $name;
 	}
 	
-	public function normalize(string $path): string {
+	public static function normalize(string $path): string {
 		$key = md5($path);
-		if (isset($this->buffer["normalize"][$key])) {
-			return $this->buffer["normalize"][$key];
-		}
 		$unc = "";
 		$drive = "";
 		$path = str_replace("\\", "/", $path);
@@ -267,12 +235,11 @@ class f {
 		} else {
 			$normalized = $drive . $normalized;
 		}
-		$this->buffer["normalize"][$key] = $normalized;
 		return $normalized;
 	}
 	
-	public function permission(string $path, int|null $chmod = null): int|bool {
-		$path = $this->normalize($path);
+	public static function permission(string $path, int|null $chmod = null): int|bool {
+		$path = self::normalize($path);
 		if ($chmod === null) {
 			$perms = fileperms($path);
 			if ($perms === false) {
@@ -284,9 +251,9 @@ class f {
 		return chmod($path, $mode);
 	}
 	
-	public function remove(string $path): bool {
+	public static function remove(string $path): bool {
 		$return = false;
-		$path = $this->normalize($path);
+		$path = self::normalize($path);
 		if ((is_file($path)) || (is_link($path))) {
 			$return = unlink($path);
 			if ($return) {
@@ -297,7 +264,7 @@ class f {
 			if ($dh = opendir($path)) {
 				while (($item = readdir($dh)) !== false) {
 					if (($item === '.') || ($item === '..')) continue;
-					if (!$this->remove($path . "/" . $item)) {
+					if (!self::remove($path . "/" . $item)) {
 						$return = false;
 						break;
 					}
@@ -314,9 +281,9 @@ class f {
 		return $return;
 	}
 	
-	public function read(string $path, int|null $offset = null, int|null $maxlen = null): string {
+	public static function read(string $path, int|null $offset = null, int|null $maxlen = null): string {
 		$return = "";
-		$path = $this->normalize($path);
+		$path = self::normalize($path);
 		if (!is_file($path)) {
 			return $return;
 		}
@@ -363,9 +330,9 @@ class f {
 		return $return;
 	}
 	
-	public function read_csv(string $path, string $separator = ';'): array {
+	public static function read_csv(string $path, string $separator = ';'): array {
 		$data = [];
-		$content = $this->read($path);
+		$content = self::read($path);
 		$content = preg_replace('/^\x{FEFF}/u', '', $content);
 		$lines = preg_split('/\r\n|\r|\n/', trim($content));
 		foreach ($lines as $line) {
@@ -379,20 +346,20 @@ class f {
 		return $data;
 	}
 	
-	public function read_ini(string $path): array {
-		$data = parse_ini_string($this->read($path), true, INI_SCANNER_TYPED);
+	public static function read_ini(string $path): array {
+		$data = parse_ini_string(self::read($path), true, INI_SCANNER_TYPED);
 		if ($data === false) {
 			return [];
 		}
 		return $data;
 	}
 	
-	public function read_json(string $path): mixed {
-		return json_decode($this->read($path), true);
+	public static function read_json(string $path): mixed {
+		return json_decode(self::read($path), true);
 	}
 	
-	public function rename(string $path, string|null $name = null): bool {
-		$path = $this->normalize($path);
+	public static function rename(string $path, string|null $name = null): bool {
+		$path = self::normalize($path);
 		$name = ($name === null) ? basename($path) : $name;
 		$new = dirname($path) . "/" . $name;
 		if (file_exists($new)) {
@@ -401,7 +368,7 @@ class f {
 		return rename($path, $new);
 	}
 	
-	public function scan(string $path, int $key = F_SCAN_ALL, bool $absolute = false, bool $recursive = false, int|null $depth = null): array {
+	public static function scan(string $path, int $key = F_SCAN_ALL, bool $absolute = false, bool $recursive = false, int|null $depth = null): array {
 		$result = [];
 		if (is_int($depth)) {
 			if ($depth <= 0) {
@@ -409,7 +376,7 @@ class f {
 			}
 			$depth--;
 		}
-		$path = $this->normalize($path);
+		$path = self::normalize($path);
 		if (is_dir($path)) {
 			if ($scan = scandir($path)) {
 				$scan = array_diff($scan, ['.', '..']);
@@ -424,7 +391,7 @@ class f {
 							$result[] = $link;
 						}
 						if ($recursive) {
-							$result = array_merge($result, $this->scan($link, $key, true, true, $depth));
+							$result = array_merge($result, self::scan($link, $key, true, true, $depth));
 						}
 					}
 				}
@@ -436,8 +403,8 @@ class f {
 		return $result;
 	}
 	
-	public function size(string $path): int	{
-		$path = $this->normalize($path);
+	public static function size(string $path): int	{
+		$path = self::normalize($path);
 		$size = 0;
 		if (is_file($path)) {
 			$size = filesize($path) ?: 0;
@@ -447,7 +414,7 @@ class f {
 			if ($dh = opendir($path)) {
 				while (($item = readdir($dh)) !== false) {
 					if (($item === '.') || ($item === '..')) continue;
-					$size += $this->size($path . "/" . $item);
+					$size += self::size($path . "/" . $item);
 				}
 				closedir($dh);
 			}
@@ -455,9 +422,9 @@ class f {
 		return $size;
 	}
 
-	public function space(string $path, int $key = F_SPACE_TOTAL): int {
+	public static function space(string $path, int $key = F_SPACE_TOTAL): int {
 		$space = 0;
-		$path = $this->normalize($path);
+		$path = self::normalize($path);
 		if ($key === F_SPACE_FREE) {
 			$space = (int)disk_free_space($path);
 		} elseif ($key === F_SPACE_USED) {
@@ -468,10 +435,10 @@ class f {
 		return $space;
 	}
 	
-	public function write(string $path, string $data = '', int|null $offset = null, int|null $maxlen = null): bool {
+	public static function write(string $path, string $data = '', int|null $offset = null, int|null $maxlen = null): bool {
 		$return = false;
-		$path = $this->normalize($path);
-		if (!$this->make(dirname($path))) {
+		$path = self::normalize($path);
+		if (!self::make(dirname($path))) {
 			return $return;
 		}
 		if (($maxlen !== null) && (strlen($data) > $maxlen)) {
@@ -515,16 +482,16 @@ class f {
 		return $return;
 	}
 	
-	public function write_csv(string $path, array $array = [], string $separator = ';'): bool {
+	public static function write_csv(string $path, array $array = [], string $separator = ';'): bool {
 		$rows = [];
 		foreach ($array as $row) {
 			$row = array_map('strval', $row);
 			$rows[] = implode($separator, $row) . $separator;
 		}
-		return $this->write($path, implode("\n", $rows));
+		return self::write($path, implode("\n", $rows));
 	}
 	
-	public function write_ini(string $path, array $array = []): bool {
+	public static function write_ini(string $path, array $array = []): bool {
 		$data = "";
 		foreach ($array as $section => $values) {
 			if ((!is_string($section)) && (!is_int($section))) continue;
@@ -552,25 +519,15 @@ class f {
 			$data .= PHP_EOL;
 		}
 		$data = rtrim($data, PHP_EOL);
-		return $this->write($path, $data);
+		return self::write($path, $data);
 	}
 	
-	public function write_json(string $path, array $array = []): bool {
+	public static function write_json(string $path, array $array = []): bool {
 		$json = json_encode($array, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
 		if ($json === false) {
 			return false;
 		}
-		return $this->write($path, $json);
-	}
-	
-	public function __destruct() {
-		if (isset($this->buffer['ini'])) {
-			foreach ($this->buffer['ini'] as $path => $value) {
-				if ($this->read_ini($path) !== $this->buffer['ini'][$path]) {
-					$this->write_ini($path, $this->buffer['ini'][$path]);
-				}
-			}
-		}
+		return self::write($path, $json);
 	}
 	
 }
