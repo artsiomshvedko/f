@@ -1,5 +1,5 @@
 F — PHP Filesystem Library<br>
-Version: 1.0.2<br>
+Version: 2.0.0<br>
 PHP Version: 8.0+
 
 **Description:**<br>
@@ -9,10 +9,10 @@ permissions, timestamps, and path utilities.
 <hr>
 
 **Accessed**<br>
-$f->accessed — Get or update file last access time
+f::accessed — Get or update file last access time
 
 **Description**<br>
-`$f->accessed(string $path, int|null $time = null): int|null`
+`f::accessed(string $path, int|null $time = null): int|null`
 
 Gets the last access timestamp of a file, or updates it if $time is provided.
 
@@ -27,10 +27,10 @@ Gets the last access timestamp of a file, or updates it if $time is provided.
 <hr>
 
 **Append**<br>
-$f->append — Append data to a file
+f::append — Append data to a file
 
 **Description**<br>
-`$f->append(string $path, string $data, int|null $maxlen = null): bool`
+`f::append(string $path, string $data, int|null $maxlen = null): bool`
 
 Appends data to the end of a file. If $maxlen is specified, only up to $maxlen bytes will be written starting from the current end of the file.
 
@@ -46,10 +46,10 @@ Appends data to the end of a file. If $maxlen is specified, only up to $maxlen b
 <hr>
 
 **Copy**<br>
-$f->copy — Copy a file, directory, or symbolic link
+f::copy — Copy a file, directory, or symbolic link
 
 **Description**<br>
-`$f->copy(string $source, string $dest, string|null $name = null): bool`
+`f::copy(string $source, string $dest, string|null $name = null): bool`
 
 Copies a file, directory, or symbolic link from a source path to a destination path.
 - If $name is provided, the copied item will use that name; otherwise, the original basename is used.
@@ -68,10 +68,10 @@ Copies a file, directory, or symbolic link from a source path to a destination p
 <hr>
 
 **Created**<br>
-$f->created — Get file creation time
+f::created — Get file creation time
 
 **Description**<br>
-`$f->created(string $path): int|false`
+`f::created(string $path): int|false`
 
 Gets the creation timestamp of a file.
 
@@ -85,10 +85,10 @@ Gets the creation timestamp of a file.
 <hr>
 
 **Cut**<br>
-$f->cut — Move a file, directory, or symbolic link
+f::cut — Move a file, directory, or symbolic link
 
 **Description**<br>
-`$f->cut(string $source, string $dest, string|null $name = null): bool`
+`f::cut(string $source, string $dest, string|null $name = null): bool`
 
 Moves a file, directory, or symbolic link from a source path to a destination path.
 - Internally, it copies the item to the destination and then removes the original.
@@ -106,10 +106,10 @@ Moves a file, directory, or symbolic link from a source path to a destination pa
 <hr>
 
 **Extension**<br>
-$f->extension — Get file extension
+f::extension — Get file extension
 
 **Description**<br>
-`$f->extension(string $path): string`
+`f::extension(string $path): string`
 
 Returns the file extension of the given path.
 
@@ -122,10 +122,10 @@ Returns the file extension of the given path.
 <hr>
 
 **Filename**<br>
-$f->filename — Get filename without extension
+f::filename — Get filename without extension
 
 **Description**<br>
-`$f->filename(string $path): string`
+`f::filename(string $path): string`
 
 Returns the file name without its extension from the given path.
 
@@ -138,10 +138,10 @@ Returns the file name without its extension from the given path.
 <hr>
 
 **Find**<br>
-$f->find — Find files matching a pattern
+f::find — Find files matching a pattern
 
 **Description**<br>
-`$f->find(string $path, int $key = F_SCAN_ALL, int $keys = F_ALL, bool $recursive = false, string|null $query = null, int|null $depth = null): array`
+`f::find(string $path, int $key = F_SCAN_ALL, int $keys = F_ALL, bool $recursive = false, string|null $query = null, int|null $depth = null): array`
 
 Scans a directory for files, directories, or links and returns detailed information about matching items.
 - Can filter by name pattern, size range, and access/creation/modification times.
@@ -171,53 +171,11 @@ An associative [array] where keys are full paths and values are arrays of file a
 
 <hr>
 
-**Ini Get**<br>
-$f->ini_get — Get or set a value from an INI file
-
-**Description**<br>
-`$f->ini_get(string $path, string $section, string $key, mixed $value = ""): mixed`
-
-Reads a value from an INI file, optionally setting a default if the key does not exist.
-- The INI file is read once and cached internally for subsequent calls.
-- If the specified key does not exist, the provided $value is returned and stored in the cache.
-
-**Parameters**<br>
-- path – Path to the file.
-- section – INI section name.
-- key – Key within the section.
-- value – Default value to use if the key does not exist.
-
-**Return Values**<br>
-- [Value] from the INI file if it exists, otherwise the provided default value.
-
-<hr>
-
-**Ini Set**<br>
-$f->ini_set — Set a value in an INI file
-
-**Description**<br>
-`$f->ini_set(string $path, string $section, string $key, mixed $value): mixed`
-
-Sets a value in an INI file and updates the internal cache.
-- If the INI file has not been read yet, it will be loaded first.
-- The new value is stored in the cache immediately.
-
-**Parameters**<br>
-- path – Path to the file.
-- section – INI section name.
-- key – Key within the section to set.
-- value – Value to assign to the key.
-
-**Return Values**<br>
-- The [value] that was set.
-
-<hr>
-
 **Location**<br>
-$f->location — Get directory path of a file
+f::location — Get directory path of a file
 
 **Description**<br>
-`$f->location(string $path): string`
+`f::location(string $path): string`
 
 Returns the directory path (parent folder) of the given file path.
 
@@ -230,10 +188,10 @@ Returns the directory path (parent folder) of the given file path.
 <hr>
 
 **Modified**<br>
-$f->modified — Get or update file modification time
+f::modified — Get or update file modification time
 
 **Description**<br>
-`$f->modified(string $path, int|null $time = null): int|null`
+`f::modified(string $path, int|null $time = null): int|null`
 
 Gets the last modification timestamp of a file, or updates it if $time is provided.
 
@@ -248,10 +206,10 @@ Gets the last modification timestamp of a file, or updates it if $time is provid
 <hr>
 
 **Make**<br>
-$f->make — Create a directory
+f::make — Create a directory
 
 **Description**<br>
-`$f->make(string $path, int $chmod = 755): bool`
+`f::make(string $path, int $chmod = 755): bool`
 
 Creates a directory at the specified path.
 - If the directory already exists, the function returns true.
@@ -268,10 +226,10 @@ Creates a directory at the specified path.
 <hr>
 
 **Name**<br>
-$f->name — Get file name with extension
+f::name — Get file name with extension
 
 **Description**<br>
-`$f->name(string $path): string`
+`f::name(string $path): string`
 
 Returns the file name including its extension from the given path.
 
@@ -284,10 +242,10 @@ Returns the file name including its extension from the given path.
 <hr>
 
 **Normalize**<br>
-$f->normalize — Normalize a file or directory path
+f::normalize — Normalize a file or directory path
 
 **Description**<br>
-`$f->normalize(string $path): string`
+`f::normalize(string $path): string`
 
 Converts a file or directory path to a normalized absolute form.
 - Resolves relative segments like . and ...
@@ -305,10 +263,10 @@ Converts a file or directory path to a normalized absolute form.
 <hr>
 
 **Permission**<br>
-$f->permission — Get or set file permissions
+f::permission — Get or set file permissions
 
 **Description**<br>
-`$f->permission(string $path, int|null $chmod = null): int|bool`
+`f::permission(string $path, int|null $chmod = null): int|bool`
 
 Gets the permissions of a file or sets new permissions if $chmod is provided.
 - When $chmod is null, returns the current permissions in octal string format.
@@ -326,10 +284,10 @@ Gets the permissions of a file or sets new permissions if $chmod is provided.
 <hr>
 
 **Remove**<br>
-$f->remove — Delete a file, directory, or symbolic link
+f::remove — Delete a file, directory, or symbolic link
 
 **Description**<br>
-`$f->remove(string $path): bool`
+`f::remove(string $path): bool`
 
 Removes a file, directory, or symbolic link.
 - Files and links are deleted directly.
@@ -346,10 +304,10 @@ Removes a file, directory, or symbolic link.
 <hr>
 
 **Read**<br>
-$f->read — Read data from a file
+f::read — Read data from a file
 
 **Description**<br>
-`$f->read(string $path, int|null $offset = null, int|null $maxlen = null): string`
+`f::read(string $path, int|null $offset = null, int|null $maxlen = null): string`
 
 Reads data from a file with optional offset and maximum length.
 - Supports reading from a specific offset (negative offsets count from the end).
@@ -367,10 +325,10 @@ Reads data from a file with optional offset and maximum length.
 <hr>
 
 **Read CSV**<br>
-$f->read_csv — Read CSV file into an array
+f::read_csv — Read CSV file into an array
 
 **Description**<br>
-`$f->read_csv(string $path, string $separator = ';'): array`
+`f::read_csv(string $path, string $separator = ';'): array`
 
 Reads a CSV file and returns its contents as a two-dimensional array.
 - Supports custom field separators (default is ;).
@@ -388,10 +346,10 @@ Reads a CSV file and returns its contents as a two-dimensional array.
 <hr>
 
 **Read INI**<br>
-$f->read_ini — Read an INI file into an array
+f::read_ini — Read an INI file into an array
 
 **Description**<br>
-`$f->read_ini(string $path): array`
+`f::read_ini(string $path): array`
 
 Reads an INI file and parses its contents into an associative array.
 - Uses parse_ini_string with INI_SCANNER_TYPED to automatically convert values to appropriate types.
@@ -406,10 +364,10 @@ Reads an INI file and parses its contents into an associative array.
 <hr>
 
 **Read JSON**<br>
-$f->read_json — Read a JSON file
+f::read_json — Read a JSON file
 
 **Description**<br>
-`$f->read_json(string $path): mixed`
+`f::read_json(string $path): mixed`
 
 Reads a JSON file and decodes its contents into a PHP value.
 - Returns an associative array if the JSON represents an object.
@@ -424,10 +382,10 @@ Reads a JSON file and decodes its contents into a PHP value.
 <hr>
 
 **Rename**<br>
-$f->rename — Rename a file or directory
+f::rename — Rename a file or directory
 
 **Description**<br>
-`$f->rename(string $path, string|null $name = null): bool`
+`f::rename(string $path, string|null $name = null): bool`
 
 Renames a file or directory.
 - If $name is provided, the item is renamed to that name; otherwise, its basename is used (effectively no change).
@@ -444,10 +402,10 @@ Renames a file or directory.
 <hr>
 
 **Scan**<br>
-$f->scan — Scan a directory for files, directories, or links
+f::scan — Scan a directory for files, directories, or links
 
 **Description**<br>
-`$f->scan(string $path, int $key = F_SCAN_ALL, bool $absolute = false, bool $recursive = false, int|null $depth = null): array`
+`f::scan(string $path, int $key = F_SCAN_ALL, bool $absolute = false, bool $recursive = false, int|null $depth = null): array`
 
 Scans a directory and returns a list of files, directories, or symbolic links.
 - Can filter by type: files, directories, links, or all.
@@ -467,10 +425,10 @@ Scans a directory and returns a list of files, directories, or symbolic links.
 <hr>
 
 **Size**<br>
-$f->size — Get size of a file or directory
+f::size — Get size of a file or directory
 
 **Description**<br>
-`$f->size(string $path): int`
+`f::size(string $path): int`
 
 Returns the size in bytes of a file, symbolic link, or directory.
 - For files, returns the file size.
@@ -486,10 +444,10 @@ Returns the size in bytes of a file, symbolic link, or directory.
 <hr>
 
 **Space**<br>
-$f->space — Get disk space information
+f::space — Get disk space information
 
 **Description**<br>
-`$f->space(string $path, int $key = F_SPACE_TOTAL): int`
+`f::space(string $path, int $key = F_SPACE_TOTAL): int`
 
 Returns disk space information for the filesystem containing the specified path.
 - Can return total space, used space, or free space based on $key.
@@ -507,10 +465,10 @@ Returns disk space information for the filesystem containing the specified path.
 <hr>
 
 **Write**<br>
-$f->write — Write data to a file
+f::write — Write data to a file
 
 **Description**<br>
-`$f->write(string $path, string $data = '', int|null $offset = null, int|null $maxlen = null): bool`
+`f::write(string $path, string $data = '', int|null $offset = null, int|null $maxlen = null): bool`
 
 Writes data to a file with optional offset and maximum length.
 - Creates the parent directory if it does not exist.
@@ -531,10 +489,10 @@ Writes data to a file with optional offset and maximum length.
 <hr>
 
 **Write CSV**<br>
-$f->write_csv — Write an array to a CSV file
+f::write_csv — Write an array to a CSV file
 
 **Description**<br>
-`$f->write_csv(string $path, array $array = [], string $separator = ';'): bool`
+`f::write_csv(string $path, array $array = [], string $separator = ';'): bool`
 
 Writes a two-dimensional array to a CSV file.
 - Converts all values to strings.
@@ -553,10 +511,10 @@ Writes a two-dimensional array to a CSV file.
 <hr>
 
 **Write INI**<br>
-$f->write_ini — Write an array to an INI file
+f::write_ini — Write an array to an INI file
 
 **Description**<br>
-`$f->write_ini(string $path, array $array = []): bool`
+`f::write_ini(string $path, array $array = []): bool`
 
 Writes an associative array to an INI file.
 - Each top-level key represents a section.
@@ -575,10 +533,10 @@ Writes an associative array to an INI file.
 <hr>
 
 **Write JSON**<br>
-$f->write_json — Write an array to a JSON file
+f::write_json — Write an array to a JSON file
 
 **Description**<br>
-`$f->write_json(string $path, array $array = []): bool`
+`f::write_json(string $path, array $array = []): bool`
 
 Encodes an array as JSON and writes it to a file.
 - Uses JSON_UNESCAPED_UNICODE and JSON_PRETTY_PRINT for readability.
